@@ -8,8 +8,9 @@ domain: scflow-workshop2024.github.io
 url: https://nfancy.github.io/scflow-workshop2024.github.io/
 baseurl: ""
 
+remote_theme: pages-themes/minimal@v0.2.0
 plugins:
-  - jekyll-last-modified-at
+- jekyll-remote-theme
 
 last-modified-at:
     date-format: '%d-%b-%y'
