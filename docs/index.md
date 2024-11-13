@@ -13,5 +13,5 @@ title: Home
 
 ### Getting Started
 
-To begin, explore the tools table below. Each entry includes a brief description of each tool/script and a link to the documentation page and github - if relevent - where you can find more details about its usage. The documentation pages are also available in the sidebar for easy navigation.
+To begin, explore the tools table below. 
 
