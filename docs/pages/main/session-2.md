@@ -112,11 +112,11 @@ Open the file in VScode and copy-paste the following code snippets:
 ```
 #!/bin/bash
 
-#PBS -l walltime=01:00:00
-#PBS -l select=1:ncpus=2:mem=8gb
-#PBS -N test_nextflow
-#PBS -o hello.out
-#PBS -e hello.err
+#PBS -l walltime=04:00:00
+#PBS -l select=1:ncpus=2:mem=24gb
+#PBS -N test_scflow
+#PBS -o test_scflow.out
+#PBS -e test_scflow.err
 
 cd $PBS_O_WORKDIR
 module load gcc/8.2.0
@@ -128,6 +128,7 @@ export PATH=~/scflow_workshop2024/bin/jdk-23.0.1/bin/:$PATH
 mkdir -p /rds/general/ephemeral/user/$USER/ephemeral/tmp/
 
 ~/scflow_workshop2024/bin/nextflow run combiz/nf-core-scflow -r dev-nf -profile test,singularity,imperial
+
 ```
 
 Then save the file and on your terminal
