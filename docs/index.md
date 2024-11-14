@@ -23,4 +23,4 @@ nf-core/scflow is a NextFlow (http://www.nextflow.io) pipeline targeted for cura
 
 - Pipeline outputs are standardized and include publication-quality plots, tables, and interactive reports.
 
-[<img src="/assets/img/nf-core-scflow_logo_light.png" width="340">](https://github.com/combiz/nf-core-scflow)
+[<img src="/docs/assets/img/nf-core-scflow_logo_light.png" width="340">](https://github.com/combiz/nf-core-scflow)
