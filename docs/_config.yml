@@ -5,7 +5,7 @@ theme: jekyll-theme-minimal
 authour: MAP Team
 
 domain: scflow-workshop2024.github.io
-url: https://scflow-workshop2024.github.io/
+url: https://nfancy.github.io/scflow-workshop2024.github.io
 baseurl: ""
 
 remote_theme: pages-themes/minimal@v0.2.0
