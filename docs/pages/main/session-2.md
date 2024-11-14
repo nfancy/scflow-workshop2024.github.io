@@ -113,7 +113,7 @@ Open the file in VScode and copy-paste the following code snippets:
 #!/bin/bash
 
 #PBS -l walltime=01:00:00
-#PBS -l select=1:ncpus=2:mem=8gb
+#PBS -l select=1:ncpus=8:mem=8gb
 #PBS -N test_nextflow
 #PBS -o hello.out
 #PBS -e hello.err
