@@ -4,9 +4,8 @@ title: nf-core/scflow workshop 2024
 theme: jekyll-theme-minimal
 authour: MAP Team
 
-domain: scflow-workshop2024.github.io
 url: https://nfancy.github.io
-baseurl: /scflow-workshop2024
+baseurl: /scflow-workshop2024.github.io
 
 remote_theme: pages-themes/minimal@v0.2.0
 plugins:
