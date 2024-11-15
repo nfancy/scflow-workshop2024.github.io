@@ -5,6 +5,26 @@ tool: true
 title: Session 3-Run a test single cell RNA sequencing data with nf-core/scflow
 ---
 
+## Create an analysis directory
+
+Create a directory, (eg. my_analysis) within your scflow_workshop2024 directory
+
+```bash
+cd scflow_workshop2024
+mkdir my_analysis
+```
+
+## Understanding the inputs required for scFlow
+
+Download the following into your analysis directory:
+
+```bash 
+wget https://raw.githubusercontent.com/nf-core/test-datasets/scflow/refs/SampleSheet.tsv
+wget https://raw.githubusercontent.com/nf-core/test-datasets/scflow/refs/Manifest.txt
+```
+
+Look at the contents, what do you think each row refers to? What is the link between the two files?
+
 ## Setting up config file
 
 The last command you ran in session 2 must have created two config files, open them with a text editor, it can be:
@@ -27,6 +47,24 @@ mkdir conf
 Copy the contents of the template here: https://github.com/nf-core/scflow/blob/c2c97284e609b116b857949efa256cccf308420b/conf/scflow_analysis.config and paste it into a new file within the directory you have just created
 
 Once again, open the file and browse the different parameters, edit to suit your future analyses.
+
+## Download and organize your resources
+
+Create a resources folder:
+
+```bash
+mkdir resources
+```
+
+Download the following files using wget
+
+```bash
+wget https://raw.githubusercontent.com/nf-core/test-datasets/scflow/assets/ensembl_mappings.tsv
+wget https://raw.githubusercontent.com/combiz/scFlowData/dev-nf/assets/ctd.zip
+wget https://raw.githubusercontent.com/nf-core/test-datasets/scflow/refs/reddim_genes.yml
+```
+
+Feel free to open them and browse their contents
 
 ## Re-run pipeline with your new parameters
 
