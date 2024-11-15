@@ -9,7 +9,6 @@ First things first, at any time during this session you can look at this page fo
 
 https://nf-co.re/scflow/dev/
 
-
 ## Create an analysis directory
 
 Create a directory, (eg. my_analysis) within your scflow_workshop2024 directory
@@ -49,11 +48,14 @@ Copy the contents of the template here: https://github.com/nf-core/scflow/blob/c
 
 ~/scflow_workshop2024/my_analysis/conf/scflow_analysis.config
 
-This config file contains the parameters required for each individual step contained in the pipeline.
+This config file contains the parameters required for each individual step contained in the pipeline. Once again, open the file and browse the different parameters, edit to suit your future analyses.
 
-Once again, open the file and browse the different parameters, edit to suit your future analyses.
+Now we will look at another config file that will indicate to Nextflow the hardware resources required for each job. Copy the contents from the template here: https://github.com/nf-core/scflow/blob/dev/conf/base.config
 
-Now we will look at another config file that will indicate to Nextflow the hardware resources required for each job.
+Into a file in the following location:
+~/scflow_workshop2024/my_analysis/conf/hardware.config
+
+This config file is especially important as it will be what nextflow requests from PBS for each individual job (the more memory intensive/lengthy a job is the more hardware/time resources you should allocate it).
 
 ## Download and organize your resources
 
@@ -80,7 +82,7 @@ Now you can re-run scFlow with an additional config file, edit your job submissi
 ```
 #!/bin/bash
 
-#PBS -l walltime=01:00:00
+#PBS -l walltime=03:00:00
 #PBS -l select=1:ncpus=8:mem=8gb
 #PBS -N my_analysis
 #PBS -o my_analysis.out
@@ -100,12 +102,10 @@ $celltype_mappings=###
 
 ~/scflow_workshop2024/bin/nextflow run combiz/nf-core-scflow \
 -r dev-nf \
--profile test,singularity,imperial \
 -c $scflow_config \
 --input $samplesheet \
 --manifest $manifest \
 --celltype_mappings $celltype_mappings
-
 ```
 
 This might take a while, whilst it is running you can check the status of the different jobs with the command below:
