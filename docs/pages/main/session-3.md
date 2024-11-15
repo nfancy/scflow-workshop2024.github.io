@@ -57,6 +57,8 @@ Into a file in the following location:
 
 This config file is especially important as it will be what nextflow requests from PBS for each individual job (the more memory intensive/lengthy a job is the more hardware/time resources you should allocate it).
 
+What step of the pipeline would you say is most memory intensive? If it happens to fail because of a lack of RAM which line would you edit in the config file?
+
 ## Download and organize your resources
 
 Create a resources folder:
