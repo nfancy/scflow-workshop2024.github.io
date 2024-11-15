@@ -5,6 +5,11 @@ tool: true
 title: Session 3-Run a test single cell RNA sequencing data with nf-core/scflow
 ---
 
+First things first, at any time during this session you can look at this page for guidance:
+
+https://nf-co.re/scflow/dev/
+
+
 ## Create an analysis directory
 
 Create a directory, (eg. my_analysis) within your scflow_workshop2024 directory
@@ -25,35 +30,37 @@ wget https://raw.githubusercontent.com/nf-core/test-datasets/scflow/refs/Manifes
 
 Look at the contents, what do you think each row refers to? What is the link between the two files?
 
-## Setting up config file
+## Setting up config files
 
-The last command you ran in session 2 must have created two config files, open them with a text editor, it can be:
-- nano (in the command line)
-- using VSCode
+The last command you ran in session 2 must have created two config files, open them with a text editor (eg. VSCode)
 
 Explore the parameters and reflect on their function, edit at your convenience
 
-```bash
-nano /rds/general/user/$username/home/.nextflow/config
-nano /rds/general/user/$username/home/.nextflow/assets/combiz/nf-core-scflow/nextflow.config
-```
+/rds/general/user/$username/home/.nextflow/config
+/rds/general/user/$username/home/.nextflow/assets/combiz/nf-core-scflow/nextflow.config
 
 Make a directory for additional config files.
 
 ```bash
-mkdir conf
+mkdir ~/scflow_workshop2024/my_analysis/conf
 ```
 
-Copy the contents of the template here: https://github.com/nf-core/scflow/blob/c2c97284e609b116b857949efa256cccf308420b/conf/scflow_analysis.config and paste it into a new file within the directory you have just created
+Copy the contents of the template here: https://github.com/nf-core/scflow/blob/c2c97284e609b116b857949efa256cccf308420b/conf/scflow_analysis.config and paste it into a new file (you can call it scflow_analysis.config) within the directory you have just created
+
+~/scflow_workshop2024/my_analysis/conf/scflow_analysis.config
+
+This config file contains the parameters required for each individual step contained in the pipeline.
 
 Once again, open the file and browse the different parameters, edit to suit your future analyses.
+
+Now we will look at another config file that will indicate to Nextflow the hardware resources required for each job.
 
 ## Download and organize your resources
 
 Create a resources folder:
 
 ```bash
-mkdir resources
+mkdir ~/scflow_workshop2024/my_analysis/resources
 ```
 
 Download the following files using wget
@@ -70,8 +77,35 @@ Feel free to open them and browse their contents
 
 Now you can re-run scFlow with an additional config file, edit your job submission file as follows:
 
-```bash
-~/scflow_workshop2024/bin/nextflow run combiz/nf-core-scflow -r dev-nf -profile test,singularity,imperial -c conf/new_config.config
+```
+#!/bin/bash
+
+#PBS -l walltime=01:00:00
+#PBS -l select=1:ncpus=8:mem=8gb
+#PBS -N my_analysis
+#PBS -o my_analysis.out
+#PBS -e my_analysis.err
+
+cd $PBS_O_WORKDIR
+module load gcc/8.2.0
+export NXF_OPTS='-Xms1g -Xmx4g'
+
+export JAVA_HOME=~/scflow_workshop2024/bin/jdk-23.0.1
+export PATH=~/scflow_workshop2024/bin/jdk-23.0.1/bin/:$PATH
+
+scflow_config=~/scflow_workshop2024/my_analysis/conf/scflow_analysis.config
+$samplesheet=###
+$manifest=###
+$celltype_mappings=###
+
+~/scflow_workshop2024/bin/nextflow run combiz/nf-core-scflow \
+-r dev-nf \
+-profile test,singularity,imperial \
+-c $scflow_config \
+--input $samplesheet \
+--manifest $manifest \
+--celltype_mappings $celltype_mappings
+
 ```
 
 This might take a while, whilst it is running you can check the status of the different jobs with the command below:
@@ -83,7 +117,7 @@ qstat -a
 As the scFlow progresses, inspect the contents on the results/ directory:
 
 ```bash
-ll results/
+ll ~/scflow_workshop2024/my_analysis/results/
 ```
 
 Download on of the QC reports and go through the different metrics
