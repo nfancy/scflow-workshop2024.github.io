@@ -81,8 +81,6 @@ This config file contains the parameters required for each individual step conta
 
 ## Hardware requirments config file
 
-Now we will look at another config file that will indicate to Nextflow the hardware resources required for each job. Copy the contents from the template here: https://github.com/nf-core/scflow/blob/dev/conf/base.config
-
 In this file, you can see hardware and time allocations for groups of jobs that are categorized into:
 - tiny
 - low
@@ -92,6 +90,8 @@ In this file, you can see hardware and time allocations for groups of jobs that 
 - high_memory
 
 And there are already values attributed to each categories of jobs. As you can see the jobs will be retried if failed, but with more resource allocations. Keep in mind though, that the job might not fail because of hardware/time requirements so increasing them might not solve everything!
+
+Now we will look at another config file that will indicate to Nextflow the hardware resources required for each job. Copy the contents from the template here: https://github.com/nf-core/scflow/blob/dev/conf/base.config
 
 Into a file in the following location:
 ~/scflow_workshop2024/my_analysis/conf/hardware.config
