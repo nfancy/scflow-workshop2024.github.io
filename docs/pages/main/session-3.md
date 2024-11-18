@@ -73,7 +73,7 @@ mkdir ~/scflow_workshop2024/my_analysis/conf
 
 ## Parameters for indidual steps within the pipeline
 
-Copy the contents of the template here: https://github.com/nf-core/scflow/blob/c2c97284e609b116b857949efa256cccf308420b/conf/scflow_analysis.config and paste it into a new file (you can call it scflow_analysis.config) within the directory you have just created
+Copy the contents of the template here: (scflow_analysis.config)[https://github.com/combiz/nf-core-scflow/blob/dev/conf/scflow_analysis.config] and paste it into a new file (you can call it scflow_analysis.config) within the directory you have just created
 
 ~/scflow_workshop2024/my_analysis/conf/scflow_analysis.config
 
@@ -91,7 +91,7 @@ In this file, you can see hardware and time allocations for groups of jobs that 
 
 And there are already values attributed to each categories of jobs. As you can see the jobs will be retried if failed, but with more resource allocations. Keep in mind though, that the job might not fail because of hardware/time requirements so increasing them might not solve everything!
 
-Now we will look at another config file that will indicate to Nextflow the hardware resources required for each job. Copy the contents from the template here: https://github.com/nf-core/scflow/blob/dev/conf/base.config
+Now we will look at another config file that will indicate to Nextflow the hardware resources required for each job. Copy the contents from the template here: (base.config)[https://github.com/combiz/nf-core-scflow/blob/dev/conf/base.config]
 
 Into a file in the following location:
 ~/scflow_workshop2024/my_analysis/conf/hardware.config
@@ -166,6 +166,26 @@ ll ~/scflow_workshop2024/my_analysis/results/
 Download on of the QC reports and go through the different metrics
 
 ## Bonus task
+
+## Running the pipeline using a singularity image
+
+In order to make your analysis more reproducible you can use a singularity image for scFlow, one can be downloaded in the following way:
+
+1. Create a directory to store your image:
+
+```bash
+mkdir ~/singularity-cache/
+cd ~/singularity-cache/
+```
+
+2. Download the image:
+
+```bash
+singularity pull --name "nfancy-scflow-0.7.2.img" docker://nfancy/scflow:0.7.2
+```
+
+
+
 ## Generating your own input files
 
 If you have some time, try and generate a simple manifest file, that will be required when you use the pipeline with your own dataset (without the "test" profile). It is recommended to use R or python for that task.
