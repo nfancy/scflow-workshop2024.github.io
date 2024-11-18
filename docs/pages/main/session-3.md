@@ -9,6 +9,33 @@ First things first, at any time during this session you can look at this page fo
 
 https://nf-co.re/scflow/dev/
 
+## Understanding the PBS parameters
+
+As you may be aware it is **STRICTLY FORBIDDEN** to run long/resource intensive commands on the login node of the HPC (you use will use this node mostly for pwd, cd, ls, echo ... which cannot be considered resource intensive)
+
+The advantage of a HPC is that you have a whole range of very powerful nodes connected to the login node that you can request for resource intensive activities. On the RCS at Imperial we use PBS to request the latter. As you have seen from the previous session, your submission script contains the following:
+
+```
+#!/bin/bash
+
+#PBS -l walltime=01:00:00
+#PBS -l select=1:ncpus=2:mem=8gb
+#PBS -N test_nextflow
+#PBS -o hello.out
+#PBS -e hello.err
+```
+
+That is the information you give to PBS for the command you want to run, the each mean the following:
+- walltime: the amount of time that you request for the job you want to run
+- select: the amount of nodes you require (will always be 1)
+- ncpus: the amount of CPUs you require
+- mem: the amount of RAM 
+- N: is the name of your job
+- o: will be the path to your output log of your job (whatever your command(s) print on the terminal will appear here)
+- e: the path to your error log
+
+There are a lot of parameters for PBS that you can explore here: ( https://albertsk.org/wp-content/uploads/2011/12/pbs.pdf )
+
 ## Create an analysis directory
 
 Create a directory, (eg. my_analysis) within your scflow_workshop2024 directory
@@ -44,13 +71,27 @@ Make a directory for additional config files.
 mkdir ~/scflow_workshop2024/my_analysis/conf
 ```
 
+## Parameters for indidual steps within the pipeline
+
 Copy the contents of the template here: https://github.com/nf-core/scflow/blob/c2c97284e609b116b857949efa256cccf308420b/conf/scflow_analysis.config and paste it into a new file (you can call it scflow_analysis.config) within the directory you have just created
 
 ~/scflow_workshop2024/my_analysis/conf/scflow_analysis.config
 
 This config file contains the parameters required for each individual step contained in the pipeline. Once again, open the file and browse the different parameters, edit to suit your future analyses.
 
+## Hardware requirments config file
+
 Now we will look at another config file that will indicate to Nextflow the hardware resources required for each job. Copy the contents from the template here: https://github.com/nf-core/scflow/blob/dev/conf/base.config
+
+In this file, you can see hardware and time allocations for groups of jobs that are categorized into:
+- tiny
+- low
+- medium
+- high
+- long
+- high_memory
+
+And there are already values attributed to each categories of jobs. As you can see the jobs will be retried if failed, but with more resource allocations. Keep in mind though, that the job might not fail because of hardware/time requirements so increasing them might not solve everything!
 
 Into a file in the following location:
 ~/scflow_workshop2024/my_analysis/conf/hardware.config
@@ -157,4 +198,42 @@ Sample_XXX4 lopmn   A4
 ```
 
 Note that your metadata and manifest files must have the same number of rows and the sample names and manifest/key entries must match, otherwise the scFlow will fail.
+
+## Additional notes
+
+## If the pipeline fails
+
+In case the pipeline fails in the future (it will probably not happen in this workshop); Nextflow has a "resume" flag that you can add at the end of the command. It will resume the pipeline at the step where it failed. However, if any input file (eg. Samplesheet, manifest file), excluding config files; it will restart from the beginning.
+
+Your submission script would therefore be as follows:
+
+```
+#!/bin/bash
+
+#PBS -l walltime=03:00:00
+#PBS -l select=1:ncpus=8:mem=8gb
+#PBS -N my_analysis
+#PBS -o my_analysis.out
+#PBS -e my_analysis.err
+
+cd $PBS_O_WORKDIR
+module load gcc/8.2.0
+export NXF_OPTS='-Xms1g -Xmx4g'
+
+export JAVA_HOME=~/scflow_workshop2024/bin/jdk-23.0.1
+export PATH=~/scflow_workshop2024/bin/jdk-23.0.1/bin/:$PATH
+
+scflow_config=~/scflow_workshop2024/my_analysis/conf/scflow_analysis.config
+$samplesheet=###
+$manifest=###
+$celltype_mappings=###
+
+~/scflow_workshop2024/bin/nextflow run combiz/nf-core-scflow \
+-r dev-nf \
+-c $scflow_config \
+--input $samplesheet \
+--manifest $manifest \
+--celltype_mappings $celltype_mappings \
+--resume
+```
 
