@@ -22,5 +22,4 @@ In this session we will help you setting up VScode which will make it seamless t
 
     <img src="{{"/assets/img/configure_ssh.png" | relative_url}}"  width="500px" alt="Configure SSH" />
 
-
 3. **Activate cmd terminal**: Go to the view tab and select terminal which will now open the terminal at the bottom of the VScode panel.
