@@ -86,7 +86,7 @@ And there are already values attributed to each categories of jobs. As you can s
 
 Now we will look at another config file that will indicate to Nextflow the hardware resources required for each job. Copy the contents from the template here: [base.config](https://github.com/combiz/nf-core-scflow/blob/dev/conf/base.config)
 
-Into a file in the following location:
+Open a new file in the following location:
 ~/scflow_workshop2024/my_analysis/conf/resources.config
 
 This config file is especially important as it will be what nextflow requests from PBS for each individual job (the more memory intensive/lengthy a job is the more hardware/time resources you should allocate it).
@@ -125,7 +125,9 @@ wget https://raw.githubusercontent.com/nf-core/test-datasets/scflow/refs/reddim_
 
 Feel free to open them and browse their contents
 
-You can add the path to those files in the resource.config file, as follows:
+Open the following file: ~/scflow_workshop2024/my_analysis/conf/resources.config
+
+Add the following:
 
 ```
 params {
@@ -138,7 +140,7 @@ params {
   //Analysis Resource Params - general
   ctd_path = "~/scflow_workshop2024/my_analysis//ctd.zip"
   ensembl_mappings = "~/scflow_workshop2024/my_analysis/ensembl_mappings_human.tsv"
-  reddim_genes_yml = "~/scflow_workshop2024/my_analysis/reddim_genes_human.yml"
+  reddim_genes_yml = "~/scflow_workshop2024/my_analysis/reddim_genes.yml"
   
 }
 ```
