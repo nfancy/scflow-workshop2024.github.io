@@ -13,7 +13,8 @@ title: Session 3-Run a test single cell RNA sequencing data with nf-core/scflow
 * **Check the additional resource requirements**
 * **Submit your own nf-core/scflow job on HPC**
 
-Now that you have successfully managed to run the nf-core/scflow pipeline with test dataset, it's time to set up your own analysis. Let us first inspect the outputs from the test run.
+Now that you have (successfully) managed to run the nf-core/scflow pipeline with test dataset, it's time to set up your own analysis. Let us first inspect the outputs from the test run.
+
 
 ## Create an analysis directory
 
@@ -24,7 +25,7 @@ cd ~/scflow_workshop2024
 mkdir my_analysis
 ```
 
-## Understanding the inputs required for scFlow
+## Getting your samplesheet and manifest files ready
 
 Just to keep the launch directory neat and tidy we will create multiple sub-directories for different types of input files required for the pipeline. **Note: Every time you `cd` into a directory remember to go back to your launch directory.** Hint: Use `pwd`, `ls` & `cd` sparingly. 
 
@@ -33,15 +34,12 @@ mkdir ~/scflow_workshop2024/my_analysis/refs/
 cd ~/scflow_workshop2024/my_analysis/refs/
 ```
 
-Download the following into your analysis directory:
+Download the templates into your refs/ directory:
 
 ```bash 
 wget https://raw.githubusercontent.com/nf-core/test-datasets/scflow/refs/SampleSheet.tsv
 wget https://raw.githubusercontent.com/nf-core/test-datasets/scflow/refs/Manifest.txt
 ```
-
-Inspect the input files. Use `cat file/path` or `less -S file/path`
-
 There is a typo in the Manifest.txt file, spot it and correct it by opening it on VScode explorer.
 
 We will now download the raw input matrices that contains the gene expression count. In the manifest file, you will see they direct to a zipped directories and hosted on github, however, in most cases you will have them in the matrix format. Let's first create a directory to save the input matrices.
@@ -54,10 +52,6 @@ The following codes will download the zipped files and unzip them.
 
 ```bash
 while read col1 col2; do wget $col2; done <  ~/scflow_workshop2024/my_analysis/refs/Manifest.txt
-ls | cut -f 1 -d . > sample.tmp
-while read line; do unzip $line.zip -d $line; done < sample.tmp
-rm ~/scflow_workshop2024/my_analysis/input/*zip
-rm sample.tmp
 ```
 
 ## Understanding the structure of the manifest and samplesheets
@@ -96,6 +90,8 @@ Note that your metadata and manifest files must have the same number of rows and
 
 ## Setting up config files
 
+This section will focus on setting up the config files for your analysis (they contain all the parameters needed for the pipeline to run).
+
 Go back to the launch directory and make a directory for additional config files.
 
 ```bash
@@ -110,7 +106,7 @@ Copy the contents of the template here: [scflow_analysis.config](https://github.
 
 This config file contains the parameters required for each individual step contained in the pipeline. Once again, open the file and browse the different parameters, edit to suit your future analyses.
 
-## Hardware requirments config file
+## Hardware requirements config file
 
 Now we will look at another config file that will indicate to Nextflow the hardware resources required for each job. Copy the contents from the template here: [base.config](https://github.com/combiz/nf-core-scflow/blob/dev-nf/conf/base.config), create and paste its contents at the following location:
 
