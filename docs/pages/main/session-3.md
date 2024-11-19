@@ -7,7 +7,7 @@ title: Session 3-Run a test single cell RNA sequencing data with nf-core/scflow
 
 First things first, at any time during this session you can look at this page for guidance:
 
-https://nf-co.re/scflow/dev/
+[nf-co.re](https://nf-co.re/scflow/dev/)
 
 ## Understanding the PBS parameters
 
@@ -34,7 +34,7 @@ That is the information you give to PBS for the command you want to run, the eac
 - o: will be the path to your output log of your job (whatever your command(s) print on the terminal will appear here)
 - e: the path to your error log
 
-There are a lot of parameters for PBS that you can explore here: ( https://albertsk.org/wp-content/uploads/2011/12/pbs.pdf )
+There are a lot of parameters for PBS that you can explore here: [PBS Manual](https://albertsk.org/wp-content/uploads/2011/12/pbs.pdf)
 
 ## Create an analysis directory
 
@@ -58,13 +58,6 @@ Look at the contents, what do you think each row refers to? What is the link bet
 
 ## Setting up config files
 
-The last command you ran in session 2 must have created two config files, open them with a text editor (eg. VSCode)
-
-Explore the parameters and reflect on their function, edit at your convenience
-
-/rds/general/user/$username/home/.nextflow/config
-/rds/general/user/$username/home/.nextflow/assets/combiz/nf-core-scflow/nextflow.config
-
 Make a directory for additional config files.
 
 ```bash
@@ -73,7 +66,7 @@ mkdir ~/scflow_workshop2024/my_analysis/conf
 
 ## Parameters for indidual steps within the pipeline
 
-Copy the contents of the template here: (scflow_analysis.config)[https://github.com/combiz/nf-core-scflow/blob/dev/conf/scflow_analysis.config] and paste it into a new file (you can call it scflow_analysis.config) within the directory you have just created
+Copy the contents of the template here: [scflow_analysis.config](https://github.com/combiz/nf-core-scflow/blob/dev/conf/scflow_analysis.config) and paste it into a new file (you can call it scflow_analysis.config) within the directory you have just created
 
 ~/scflow_workshop2024/my_analysis/conf/scflow_analysis.config
 
@@ -91,12 +84,26 @@ In this file, you can see hardware and time allocations for groups of jobs that 
 
 And there are already values attributed to each categories of jobs. As you can see the jobs will be retried if failed, but with more resource allocations. Keep in mind though, that the job might not fail because of hardware/time requirements so increasing them might not solve everything!
 
-Now we will look at another config file that will indicate to Nextflow the hardware resources required for each job. Copy the contents from the template here: (base.config)[https://github.com/combiz/nf-core-scflow/blob/dev/conf/base.config]
+Now we will look at another config file that will indicate to Nextflow the hardware resources required for each job. Copy the contents from the template here: [base.config](https://github.com/combiz/nf-core-scflow/blob/dev/conf/base.config)
 
-Into a file in the following location:
-~/scflow_workshop2024/my_analysis/conf/hardware.config
+Open a new file in the following location:
+~/scflow_workshop2024/my_analysis/conf/resources.config
 
 This config file is especially important as it will be what nextflow requests from PBS for each individual job (the more memory intensive/lengthy a job is the more hardware/time resources you should allocate it).
+
+Add the following to the resources.config file:
+
+```
+params {
+
+  // Resources
+  max_memory = 640.GB
+  max_cpus = 40
+  max_time = 24.h
+
+}
+
+```
 
 What step of the pipeline would you say is most memory intensive? If it happens to fail because of a lack of RAM which line would you edit in the config file?
 
@@ -118,7 +125,25 @@ wget https://raw.githubusercontent.com/nf-core/test-datasets/scflow/refs/reddim_
 
 Feel free to open them and browse their contents
 
-You can add the path to those files in the resource.config file, in 
+Open the following file: ~/scflow_workshop2024/my_analysis/conf/resources.config
+
+Add the following:
+
+```
+params {
+
+  // Resources
+  max_memory = 640.GB
+  max_cpus = 40
+  max_time = 24.h
+  
+  //Analysis Resource Params - general
+  ctd_path = "~/scflow_workshop2024/my_analysis//ctd.zip"
+  ensembl_mappings = "~/scflow_workshop2024/my_analysis/ensembl_mappings_human.tsv"
+  reddim_genes_yml = "~/scflow_workshop2024/my_analysis/reddim_genes.yml"
+  
+}
+```
 
 ## Re-run pipeline with your new parameters
 
@@ -141,7 +166,7 @@ export JAVA_HOME=~/scflow_workshop2024/bin/jdk-23.0.1
 export PATH=~/scflow_workshop2024/bin/jdk-23.0.1/bin/:$PATH
 
 scflow_config=~/scflow_workshop2024/my_analysis/conf/scflow_analysis.config
-resource_config=
+resource_config=####
 
 ~/scflow_workshop2024/bin/nextflow run combiz/nf-core-scflow \
 -r dev-nf \
@@ -172,8 +197,8 @@ In order to make your analysis more reproducible you can use a singularity image
 1. Create a directory to store your image:
 
 ```bash
-mkdir ~/singularity-cache/
-cd ~/singularity-cache/
+mkdir ~/scflow_workshop2024/singularity-cache/
+cd ~/scflow_workshop2024/singularity-cache/
 ```
 
 2. Download the image:
@@ -188,7 +213,7 @@ singularity pull --name "nfancy-scflow-0.7.2.img" docker://nfancy/scflow:0.7.2
 singularity {
   enabled = true
   autoMounts = true
-  cacheDir = "~/singularity-cache/"
+  cacheDir = "~/scflow_workshop2024/singularity-cache/"
   runOptions = "-B /rds/,/rdsgpfs/,/rds/general/ephemeral/user/$USER/ephemeral/tmp/:/tmp,/rds/general/ephemeral/user/$USER/ephemeral/tmp/:/var/tmp"
   
 }

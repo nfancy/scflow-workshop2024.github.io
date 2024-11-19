@@ -2,12 +2,10 @@
 layout: doc
 tool: true
 
-title: Session 1-Set up HPC environment
+title: Session 1-Set up the HPC environment
 ---
 
-In this session we will help you setting up VScode which will make it seamless to work on scripts and run the jobs on HPC via command line. We are assuming, you have access to HPC and have installed VScode on your laptop.
-
-If you do not have VScode installed, you can download it from [https://code.visualstudio.com/Download](https://code.visualstudio.com/Download).
+In this session we will help you setting up VScode which will make it seamless to work on scripts and run the jobs on HPC via the command line. We are assuming, you have acess to HPC and have <a href="https://code.visualstudio.com/docs/setup/setup-overview">installed VScode</a> on your laptop.
 
 ## What is a HPC?
 High-performance computing (HPC) is the use of parallel processing for running advanced application programs efficiently, reliably and quickly. Typically this refers to the practice of aggregating many computers together in such a way as to provide a single facility with more computational power than one could typically get out of a laptop, desktop computer or workstation. This aggregation of computers is often referred to as a high-performance computer (often abbreviated to HPC), a supercomputer or a compute cluster (i.e a cluster of computers). It is most beneficial when a problem can be broken up into many smaller tasks which can be worked on simultaneously (i.e. in parallel) where each task is handled by an individual computer. 
