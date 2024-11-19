@@ -5,36 +5,11 @@ tool: true
 title: Session 3-Run a test single cell RNA sequencing data with nf-core/scflow
 ---
 
+Now that you have (successfully) ran the test command of scFlow, this session will guide you through preparing your own run of scFlow for any potential dataset you may have.
+
 First things first, at any time during this session you can look at this page for guidance:
 
 [nf-co.re](https://nf-co.re/scflow/dev/)
-
-## Understanding the PBS parameters
-
-As you may be aware it is **STRICTLY FORBIDDEN** to run long/resource intensive commands on the login node of the HPC (you use will use this node mostly for pwd, cd, ls, echo ... which cannot be considered resource intensive)
-
-The advantage of a HPC is that you have a whole range of very powerful nodes connected to the login node that you can request for resource intensive activities. On the RCS at Imperial we use PBS to request the latter. As you have seen from the previous session, your submission script contains the following:
-
-```
-#!/bin/bash
-
-#PBS -l walltime=01:00:00
-#PBS -l select=1:ncpus=2:mem=8gb
-#PBS -N test_nextflow
-#PBS -o hello.out
-#PBS -e hello.err
-```
-
-That is the information you give to PBS for the command you want to run, the each mean the following:
-- walltime: the amount of time that you request for the job you want to run
-- select: the amount of nodes you require (will always be 1)
-- ncpus: the amount of CPUs you require
-- mem: the amount of RAM 
-- N: is the name of your job
-- o: will be the path to your output log of your job (whatever your command(s) print on the terminal will appear here)
-- e: the path to your error log
-
-There are a lot of parameters for PBS that you can explore here: [PBS Manual](https://albertsk.org/wp-content/uploads/2011/12/pbs.pdf)
 
 ## Create an analysis directory
 
@@ -45,18 +20,61 @@ cd scflow_workshop2024
 mkdir my_analysis
 ```
 
-## Understanding the inputs required for scFlow
+## Getting your samplesheet and manifest files ready
 
-Download the following into your analysis directory:
+```bash
+mkdir ~/scflow_workshop2024/my_analysis/refs/
+```
+
+Download the templates into your refs/ directory:
 
 ```bash 
 wget https://raw.githubusercontent.com/nf-core/test-datasets/scflow/refs/SampleSheet.tsv
 wget https://raw.githubusercontent.com/nf-core/test-datasets/scflow/refs/Manifest.txt
 ```
 
-Look at the contents, what do you think each row refers to? What is the link between the two files?
+There is a typo in the Manifest.txt file, spot it and correct it. Now we will download some test data, zipped by individual:
+
+```bash
+mkdir ~/scflow_workshop2024/my_analysis/input/
+cd ~/scflow_workshop2024/my_analysis/input/
+```
+
+```bash
+while read col1 col2; do wget $col2; done <  ~/scflow_workshop2024/my_analysis/refs/Manifest.txt
+```
+
+The zip files contain the following (you do not need to unzip):
+- barcodes.tsv.gz
+- features.tsv.gz
+- matrix.mtx.gz
+
+The names above should not be changed as the pipeline will look for those specically. Now edit your manifest so that the paths match the location of your files. It should be similar to the following:
+
+```
+key filepath    sample
+ajhxf   ~/scflow_workshop2024/my_analysis/input/individual_1.zip    Sample_XXX1
+bhjfv   ~/scflow_workshop2024/my_analysis/input/individual_2.zip    Sample_XXX2
+kjngh   ~/scflow_workshop2024/my_analysis/input/individual_3.zip    Sample_XXX3
+lopmn   ~/scflow_workshop2024/my_analysis/input/individual_4.zip    Sample_XXX4
+```
+
+You do not need to edit the samplesheet file, but it should be in the following format:
+
+```
+sample  manifest feature_1  feature_2   feature_3 ...
+Sample_XXX1 ajhxf   A1
+Sample_XXX2 bhjvf   A2
+Sample_XXX3 kjngh   A3
+Sample_XXX4 lopmn   A4
+```
+
+Note that your metadata and manifest files must have the same number of rows and the sample names and manifest/key entries must match, otherwise the scFlow will fail.
+
 
 ## Setting up config files
+
+This section will focus on setting up the config files for your analysis (they contain all the parameters needed for the pipeline to run).
 
 Make a directory for additional config files.
 
@@ -72,7 +90,7 @@ Copy the contents of the template here: [scflow_analysis.config](https://github.
 
 This config file contains the parameters required for each individual step contained in the pipeline. Once again, open the file and browse the different parameters, edit to suit your future analyses.
 
-## Hardware requirments config file
+## Hardware requirements config file
 
 In this file, you can see hardware and time allocations for groups of jobs that are categorized into:
 - tiny
@@ -84,12 +102,9 @@ In this file, you can see hardware and time allocations for groups of jobs that 
 
 And there are already values attributed to each categories of jobs. As you can see the jobs will be retried if failed, but with more resource allocations. Keep in mind though, that the job might not fail because of hardware/time requirements so increasing them might not solve everything!
 
-Now we will look at another config file that will indicate to Nextflow the hardware resources required for each job. Copy the contents from the template here: [base.config](https://github.com/combiz/nf-core-scflow/blob/dev/conf/base.config)
+Now we will look at another config file that will indicate to Nextflow the hardware resources required for each job. Copy the contents from the template here: [base.config](https://github.com/combiz/nf-core-scflow/blob/dev/conf/base.config), create and paste its contents at the following location:
 
-Open a new file in the following location:
 ~/scflow_workshop2024/my_analysis/conf/resources.config
-
-This config file is especially important as it will be what nextflow requests from PBS for each individual job (the more memory intensive/lengthy a job is the more hardware/time resources you should allocate it).
 
 Add the following to the resources.config file:
 
@@ -104,6 +119,8 @@ params {
 }
 
 ```
+
+This config file is especially important as it will be what nextflow requests from PBS for each individual job (the more memory intensive/lengthy a job is the more hardware/time resources you should allocate it).
 
 What step of the pipeline would you say is most memory intensive? If it happens to fail because of a lack of RAM which line would you edit in the config file?
 
@@ -138,8 +155,8 @@ params {
   max_time = 24.h
   
   //Analysis Resource Params - general
-  ctd_path = "~/scflow_workshop2024/my_analysis//ctd.zip"
-  ensembl_mappings = "~/scflow_workshop2024/my_analysis/ensembl_mappings_human.tsv"
+  ctd_path = "~/scflow_workshop2024/my_analysis/ctd.zip"
+  ensembl_mappings = "~/scflow_workshop2024/my_analysis/ensembl_mappings.tsv"
   reddim_genes_yml = "~/scflow_workshop2024/my_analysis/reddim_genes.yml"
   
 }
@@ -167,9 +184,13 @@ export PATH=~/scflow_workshop2024/bin/jdk-23.0.1/bin/:$PATH
 
 scflow_config=~/scflow_workshop2024/my_analysis/conf/scflow_analysis.config
 resource_config=####
+$samplesheet=###
+$manifest=###
 
 ~/scflow_workshop2024/bin/nextflow run combiz/nf-core-scflow \
 -r dev-nf \
+--input $samplesheet \
+--manifest $manifest \
 -c $scflow_config \
 -c $resource_config
 ```
@@ -187,8 +208,6 @@ ll ~/scflow_workshop2024/my_analysis/results/
 ```
 
 Download on of the QC reports and go through the different metrics
-
-## Bonus task
 
 ## Running the pipeline using a singularity image
 
@@ -219,40 +238,8 @@ singularity {
 }
 
 workDir = "/rds/general/ephemeral/user/$USER/ephemeral/tmp"
+process.executor = 'pbspro'
 ```
-
-## Generating your own input files
-
-If you have some time, try and generate a simple manifest file, that will be required when you use the pipeline with your own dataset (without the "test" profile). It is recommended to use R or python for that task.
-
-If you don't have a particular dataset in mind, generate a mock one.
-
-A manifest file should be in the following format (header should not be changed, should be in tab separated format):
-
-```
-key filepath    sample
-ajhxf   /rds/general/project/$your_project/.../cellbender_feature_bc_matrix/    Sample_XXX1
-bhjfv   /rds/general/project/$your_project/.../cellbender_feature_bc_matrix/    Sample_XXX2
-kjngh   /rds/general/project/$your_project/.../cellbender_feature_bc_matrix/    Sample_XXX3
-lopmn   /rds/general/project/$your_project/.../cellbender_feature_bc_matrix/    Sample_XXX4
-```
-
-The file path directories need to contain the output of cellbender, the three following files, namely:
-- barcodes.tsv.gz
-- features.tsv.gz
-- matrix.mtx.gz
-
-Finally, you need an additional metadata file, which can contain as many column as you wish but have to include a sample and manifest column:
-
-```
-sample  manifest feature_1  feature_2   feature_3 ...
-Sample_XXX1 ajhxf   A1
-Sample_XXX2 bhjvf   A2
-Sample_XXX3 kjngh   A3
-Sample_XXX4 lopmn   A4
-```
-
-Note that your metadata and manifest files must have the same number of rows and the sample names and manifest/key entries must match, otherwise the scFlow will fail.
 
 ## Additional notes
 
@@ -285,10 +272,10 @@ $celltype_mappings=###
 
 ~/scflow_workshop2024/bin/nextflow run combiz/nf-core-scflow \
 -r dev-nf \
--c $scflow_config \
 --input $samplesheet \
 --manifest $manifest \
---celltype_mappings $celltype_mappings \
+-c $scflow_config \
+-c $resource_config
 --resume
 ```
 
