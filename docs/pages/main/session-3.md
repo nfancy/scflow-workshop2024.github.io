@@ -197,8 +197,8 @@ In order to make your analysis more reproducible you can use a singularity image
 1. Create a directory to store your image:
 
 ```bash
-mkdir ~/singularity-cache/
-cd ~/singularity-cache/
+mkdir ~/scflow_workshop2024/singularity-cache/
+cd ~/scflow_workshop2024/singularity-cache/
 ```
 
 2. Download the image:
@@ -213,7 +213,7 @@ singularity pull --name "nfancy-scflow-0.7.2.img" docker://nfancy/scflow:0.7.2
 singularity {
   enabled = true
   autoMounts = true
-  cacheDir = "~/singularity-cache/"
+  cacheDir = "~/scflow_workshop2024/singularity-cache/"
   runOptions = "-B /rds/,/rdsgpfs/,/rds/general/ephemeral/user/$USER/ephemeral/tmp/:/tmp,/rds/general/ephemeral/user/$USER/ephemeral/tmp/:/var/tmp"
   
 }
