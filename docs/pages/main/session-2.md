@@ -134,7 +134,13 @@ cat hello.out
 
 ```
 
-Additionally, you can check the log file created by nextflow which has more detailed information of the run by `cat .nextflow.log`. You can see the file starts with a dot meaning it's a hidden file and can't be seen using `ls` alone. 
+Additionally, you can check the log file created by nextflow which has more detailed information of the run by **cat .nextflow.log**. You can see the file starts with a dot meaning it's a hidden file and can't be seen using `ls` alone. If you want to cancel any run at any point, you can do so by 
+
+```
+qdel jobid
+```
+To run all submitted jobs use `qselect -u $USER | xargs qdel`
+
 
 ## Understanding the PBS parameters
 
