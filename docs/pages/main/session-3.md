@@ -7,7 +7,7 @@ title: Session 3-Run a test single cell RNA sequencing data with nf-core/scflow
 
 First things first, at any time during this session you can look at this page for guidance:
 
-https://nf-co.re/scflow/dev/
+[nf-co.re](https://nf-co.re/scflow/dev/)
 
 ## Understanding the PBS parameters
 
@@ -34,7 +34,7 @@ That is the information you give to PBS for the command you want to run, the eac
 - o: will be the path to your output log of your job (whatever your command(s) print on the terminal will appear here)
 - e: the path to your error log
 
-There are a lot of parameters for PBS that you can explore here: ( https://albertsk.org/wp-content/uploads/2011/12/pbs.pdf )
+There are a lot of parameters for PBS that you can explore here: [PBS Manual](https://albertsk.org/wp-content/uploads/2011/12/pbs.pdf)
 
 ## Create an analysis directory
 
@@ -73,7 +73,7 @@ mkdir ~/scflow_workshop2024/my_analysis/conf
 
 ## Parameters for indidual steps within the pipeline
 
-Copy the contents of the template here: (scflow_analysis.config)[https://github.com/combiz/nf-core-scflow/blob/dev/conf/scflow_analysis.config] and paste it into a new file (you can call it scflow_analysis.config) within the directory you have just created
+Copy the contents of the template here: [scflow_analysis.config](https://github.com/combiz/nf-core-scflow/blob/dev/conf/scflow_analysis.config) and paste it into a new file (you can call it scflow_analysis.config) within the directory you have just created
 
 ~/scflow_workshop2024/my_analysis/conf/scflow_analysis.config
 
@@ -91,7 +91,7 @@ In this file, you can see hardware and time allocations for groups of jobs that 
 
 And there are already values attributed to each categories of jobs. As you can see the jobs will be retried if failed, but with more resource allocations. Keep in mind though, that the job might not fail because of hardware/time requirements so increasing them might not solve everything!
 
-Now we will look at another config file that will indicate to Nextflow the hardware resources required for each job. Copy the contents from the template here: (base.config)[https://github.com/combiz/nf-core-scflow/blob/dev/conf/base.config]
+Now we will look at another config file that will indicate to Nextflow the hardware resources required for each job. Copy the contents from the template here: [base.config](https://github.com/combiz/nf-core-scflow/blob/dev/conf/base.config)
 
 Into a file in the following location:
 ~/scflow_workshop2024/my_analysis/conf/resources.config
