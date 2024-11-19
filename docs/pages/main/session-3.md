@@ -156,18 +156,18 @@ Add the following:
 params {
   
   //Analysis Resource Params - general
-  ctd_path = "~/scflow_workshop2024/my_analysis/resources/ctd.zip"
-  ensembl_mappings = "~/scflow_workshop2024/my_analysis/resources/ensembl_mappings_human.tsv"
-  reddim_genes_yml = "~/scflow_workshop2024/my_analysis/resources/reddim_genes.yml"
+  ctd_path = "/rds/general/user/$USER/scflow_workshop2024/my_analysis/resources/ctd.zip"
+  ensembl_mappings = "/rds/general/user/$USER/scflow_workshop2024/my_analysis/resources/ensembl_mappings_human.tsv"
+  reddim_genes_yml = "/rds/general/user/$USER/scflow_workshop2024/my_analysis/resources/reddim_genes.yml"
   
 }
 
 workDir = "/rds/general/ephemeral/user/$USER/ephemeral/tmp"
 ```
 
-## Re-run pipeline with your new parameters
+## Run pipeline with your new parameters
 
-Now you can re-run scFlow with an additional config file, create your job submission file and name it `run_scflow.pbs.template`. Copy and paste the following codes and save the file.
+Now you can run scFlow with an additional config file, create your job submission file and name it `run_scflow.pbs.template`. Copy and paste the following codes and save the file.
 
 ```
 #!/bin/bash
@@ -201,6 +201,12 @@ manifest=###
 -c $resource_config
 ```
 
+Submit the job to the queue:
+
+```bash
+qsub run_scflow.pbs.template
+```
+
 This might take a while, whilst it is running you can check the status of the different jobs with the command below:
 
 ```bash
@@ -210,7 +216,7 @@ qstat -a
 As the scFlow progresses, inspect the contents on the results/ directory:
 
 ```bash
-ll ~/scflow_workshop2024/my_analysis/results/
+ls -l ~/scflow_workshop2024/my_analysis/results/
 ```
 
 Download the QC reports and go through the different metrics
