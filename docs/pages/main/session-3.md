@@ -94,9 +94,23 @@ And there are already values attributed to each categories of jobs. As you can s
 Now we will look at another config file that will indicate to Nextflow the hardware resources required for each job. Copy the contents from the template here: (base.config)[https://github.com/combiz/nf-core-scflow/blob/dev/conf/base.config]
 
 Into a file in the following location:
-~/scflow_workshop2024/my_analysis/conf/hardware.config
+~/scflow_workshop2024/my_analysis/conf/resources.config
 
 This config file is especially important as it will be what nextflow requests from PBS for each individual job (the more memory intensive/lengthy a job is the more hardware/time resources you should allocate it).
+
+Add the following to the resources.config file:
+
+```
+params {
+
+  // Resources
+  max_memory = 640.GB
+  max_cpus = 40
+  max_time = 24.h
+
+}
+
+```
 
 What step of the pipeline would you say is most memory intensive? If it happens to fail because of a lack of RAM which line would you edit in the config file?
 
@@ -118,7 +132,23 @@ wget https://raw.githubusercontent.com/nf-core/test-datasets/scflow/refs/reddim_
 
 Feel free to open them and browse their contents
 
-You can add the path to those files in the resource.config file, in 
+You can add the path to those files in the resource.config file, as follows:
+
+```
+params {
+
+  // Resources
+  max_memory = 640.GB
+  max_cpus = 40
+  max_time = 24.h
+  
+  //Analysis Resource Params - general
+  ctd_path = "/rds/general/project/ukdrmultiomicsproject/live/MAP_pipelines/snRNAseq/assets/ctd.zip"
+  ensembl_mappings = "/rds/general/project/ukdrmultiomicsproject/live/MAP_pipelines/snRNAseq/assets/ensembl_mappings_human.tsv"
+  reddim_genes_yml = "/rds/general/project/ukdrmultiomicsproject/live/MAP_pipelines/snRNAseq/assets/reddim_genes_human.yml"
+  
+}
+```
 
 ## Re-run pipeline with your new parameters
 
@@ -141,7 +171,7 @@ export JAVA_HOME=~/scflow_workshop2024/bin/jdk-23.0.1
 export PATH=~/scflow_workshop2024/bin/jdk-23.0.1/bin/:$PATH
 
 scflow_config=~/scflow_workshop2024/my_analysis/conf/scflow_analysis.config
-resource_config=
+resource_config=####
 
 ~/scflow_workshop2024/bin/nextflow run combiz/nf-core-scflow \
 -r dev-nf \
