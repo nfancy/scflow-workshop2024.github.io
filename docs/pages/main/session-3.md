@@ -42,16 +42,22 @@ wget https://raw.githubusercontent.com/nf-core/test-datasets/scflow/refs/Manifes
 ```
 There is a typo in the Manifest.txt file, spot it and correct it by opening it on VScode explorer.
 
-We will now download the raw input matrices that contains the gene expression count. In the manifest file, you will see they direct to a zipped directories and hosted on github, however, in most cases you will have them in the matrix format. Let's first create a directory to save the input matrices.
+We will now download the raw input matrices that contains the gene expression count. In the manifest file, you will see they direct to a zipped directories and hosted on github, however, in most cases you will have them in the matrix format. Let's first create a directory to save the input matrices and enter it.
 
 ```bash
 mkdir ~/scflow_workshop2024/my_analysis/input/
+cd ~/scflow_workshop2024/my_analysis/input/
 ```
 
 The following codes will download the zipped files and unzip them.
 
 ```bash
+
 while read col1 col2; do wget $col2; done <  ~/scflow_workshop2024/my_analysis/refs/Manifest.txt
+ls | cut -f 1 -d . > sample.tmp
+while read line; do unzip $line.zip -d $line; done < sample.tmp
+rm ~/scflow_workshop2024/my_analysis/input/*zip
+rm sample.tmp
 ```
 
 ## Understanding the structure of the manifest and samplesheets
@@ -98,7 +104,7 @@ Go back to the launch directory and make a directory for additional config files
 mkdir ~/scflow_workshop2024/my_analysis/conf
 ```
 
-## Parameters for indidual steps within the pipeline
+## Parameters for individual steps within the pipeline
 
 Copy the contents of the template here: [scflow_analysis.config](https://github.com/combiz/nf-core-scflow/blob/dev-nf/conf/scflow_analysis.config) and paste it into a new file (you can call it scflow_analysis.config) within the directory you have just created
 
@@ -156,18 +162,18 @@ Add the following:
 params {
   
   //Analysis Resource Params - general
-  ctd_path = "~/scflow_workshop2024/my_analysis/resources/ctd.zip"
-  ensembl_mappings = "~/scflow_workshop2024/my_analysis/resources/ensembl_mappings_human.tsv"
-  reddim_genes_yml = "~/scflow_workshop2024/my_analysis/resources/reddim_genes.yml"
+  ctd_path = "/rds/general/user/$USER/home/scflow_workshop2024/my_analysis/resources/ctd.zip"
+  ensembl_mappings = "/rds/general/user/$USER/home/scflow_workshop2024/my_analysis/resources/ensembl_mappings_human.tsv"
+  reddim_genes_yml = "/rds/general/user/$USER/home/scflow_workshop2024/my_analysis/resources/reddim_genes.yml"
   
 }
 
 workDir = "/rds/general/ephemeral/user/$USER/ephemeral/tmp"
 ```
 
-## Re-run pipeline with your new parameters
+## Run pipeline with your new parameters
 
-Now you can re-run scFlow with an additional config file, create your job submission file and name it `run_scflow.pbs.template`. Copy and paste the following codes and save the file.
+Now you can run scFlow with an additional config file, create your job submission file and name it `run_scflow.pbs.template`. Copy and paste the following codes and save the file.
 
 ```
 #!/bin/bash
@@ -201,6 +207,14 @@ manifest=###
 -c $resource_config
 ```
 
+Fill in the `resource_config`, `samplesheet` and `manifest` variables with the paths to the files you have created/downloaded.
+
+Submit the job to the queue:
+
+```bash
+qsub run_scflow.pbs.template
+```
+
 This might take a while, whilst it is running you can check the status of the different jobs with the command below:
 
 ```bash
@@ -210,14 +224,14 @@ qstat -a
 As the scFlow progresses, inspect the contents on the results/ directory:
 
 ```bash
-ll ~/scflow_workshop2024/my_analysis/results/
+ls -l ~/scflow_workshop2024/my_analysis/results/
 ```
 
 Download the QC reports and go through the different metrics
 
 ## Running the pipeline using a singularity image
 
-In order to make your analysis reproducible we are using the scFlow singularity image which nextflow automatically pulls down and saves in a cache direcotry. You can also do this manually prior to running your analysis in order to avoid downloading the same image multiple times and save time. 
+In order to make your analysis reproducible we are using the scFlow singularity image which nextflow automatically pulls down and saves in a cache directory. You can also do this manually prior to running your analysis in order to avoid downloading the same image multiple times and save time. 
 
 1. Create a directory to store your image:
 
@@ -238,7 +252,7 @@ singularity pull --name "nfancy-scflow-0.7.2.img" docker://nfancy/scflow:0.7.2
 singularity {
   enabled = true
   autoMounts = true
-  cacheDir = "~/scflow_workshop2024/singularity-cache/"
+  cacheDir = "/rds/general/user/$USER/home/scflow_workshop2024/singularity-cache/"
   runOptions = "-B /rds/,/rdsgpfs/,/rds/general/ephemeral/user/$USER/ephemeral/tmp/:/tmp,/rds/general/ephemeral/user/$USER/ephemeral/tmp/:/var/tmp"
 }
 ```
