@@ -5,16 +5,7 @@ tool: true
 title: Session 1-Set up the HPC environment
 ---
 
-In this session we will help you setting up VScode which will make it seamless to work on scripts and run the jobs on HPC via the command line. We are assuming, you have acess to HPC and have <a href="https://code.visualstudio.com/docs/setup/setup-overview">installed VScode</a> on your laptop.
-
-## What is a HPC?
-High-performance computing (HPC) is the use of parallel processing for running advanced application programs efficiently, reliably and quickly. Typically this refers to the practice of aggregating many computers together in such a way as to provide a single facility with more computational power than one could typically get out of a laptop, desktop computer or workstation. This aggregation of computers is often referred to as a high-performance computer (often abbreviated to HPC), a supercomputer or a compute cluster (i.e a cluster of computers). It is most beneficial when a problem can be broken up into many smaller tasks which can be worked on simultaneously (i.e. in parallel) where each task is handled by an individual computer. 
-
-When connecting to the HPC you will have access to the terminal of a "login node" which is shared between many users. This is where you will navigate the RDS, run non-resource intensive tasks and submit jobs to the "compute nodes" which are the individual computers that will run your jobs. To do so we submit a special job script to a queueing system called PBS-pro (more on this later). It is **strictly forbidden** to run resource intensive tasks on the login node as this will slow down the system for all users.
-
-<div style="text-align: center; padding: 20px">
-    <img src="{{"/assets/img/HPC.png" | relative_url}}" width="500px" alt="HPC digram" />
-</div>
+In this session we will help you setting up VScode which will make it seamless to work on scripts and run the jobs on HPC via the command line. We are assuming, you have access to HPC and have <a href="https://code.visualstudio.com/docs/setup/setup-overview">installed VScode</a> on your laptop.
 
 ## Why VScode?
 VScode is a powerful and modern code editor that allows you to work on your scripts and submit jobs to the HPC directly from your laptop from within the same program. This is particularly useful as it allows you to work on your scripts in a more user-friendly environment (unless you're Eugene who prefers to code as if it is 1991) and submit jobs to the HPC without having to switch between the HPC terminal and your laptop. It also supports a vast array of community sourced extensions that can help you with your work.
