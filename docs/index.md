@@ -3,6 +3,8 @@ layout: main
 title: "Introduction"
 ---
 
+[<img src="{{ "/assets/img/nf-core-scflow_logo_light.png" | relative_url }}" width="340">](https://github.com/combiz/nf-core-scflow)
+
 ---
 
 The nf-core/scflow pipeline enables fully automated, reproducible analyses of single-cell data at scale in the Cloud (GCP/AWS), in a high-performance computing (HPC) environment, or on a local workstation using the scFlow toolkit.
@@ -23,4 +25,35 @@ nf-core/scflow is a NextFlow (http://www.nextflow.io) pipeline targeted for cura
 
 - Pipeline outputs are standardized and include publication-quality plots, tables, and interactive reports.
 
-[<img src="{{ "/assets/img/nf-core-scflow_logo_light.png" | relative_url }}" width="340">](https://github.com/combiz/nf-core-scflow)
+---
+# Workshop Schedule
+
+### 10:00 – Welcome + Session 1
+- **Introduction to the HPC**  
+- **Setting up VSCode**
+
+---
+
+### 11:00 – Coffee Break
+
+---
+
+### 11:15 – Session 2
+- **Introduction to nextflow + nf-core-scflow**  
+- **Running your first pipeline**
+
+---
+
+### 12:30 – Lunch
+
+---
+
+### 13:00 – Session 3
+- **Detailed setup of nf-core-scflow**  
+- **Running an analysis on a test dataset**
+
+---
+
+### 15:00 – Close
+
+
