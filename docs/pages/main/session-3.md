@@ -58,13 +58,6 @@ Look at the contents, what do you think each row refers to? What is the link bet
 
 ## Setting up config files
 
-The last command you ran in session 2 must have created two config files, open them with a text editor (eg. VSCode)
-
-Explore the parameters and reflect on their function, edit at your convenience
-
-/rds/general/user/$username/home/.nextflow/config
-/rds/general/user/$username/home/.nextflow/assets/combiz/nf-core-scflow/nextflow.config
-
 Make a directory for additional config files.
 
 ```bash
