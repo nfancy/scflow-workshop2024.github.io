@@ -2,10 +2,10 @@
 layout: doc
 tool: true
 
-title: Session 1-Set up HPC environment
+title: Session 1-Set up the HPC environment
 ---
 
-In this session we will help you setting up VScode which will make it seamless to work on scripts and run the jobs on HPC via command line. We are assuming, you have acess to HPC and have installed VScode on your laptop.
+In this session we will help you setting up VScode which will make it seamless to work on scripts and run the jobs on HPC via the command line. We are assuming, you have acess to HPC and have <a href="https://code.visualstudio.com/docs/setup/setup-overview">installed VScode</a> on your laptop.
 
 
 ## Getting started
