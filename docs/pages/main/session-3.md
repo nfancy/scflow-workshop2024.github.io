@@ -46,12 +46,17 @@ We will now download the raw input matrices that contains the gene expression co
 
 ```bash
 mkdir ~/scflow_workshop2024/my_analysis/input/
+cd ~/scflow_workshop2024/my_analysis/input/
 ```
 
 The following codes will download the zipped files and unzip them.
 
 ```bash
 while read col1 col2; do wget $col2; done <  ~/scflow_workshop2024/my_analysis/refs/Manifest.txt
+ls | cut -f 1 -d . > sample.tmp
+while read line; do unzip $line.zip -d $line; done < sample.tmp
+rm ~/scflow_workshop2024/my_analysis/input/*zip
+rm sample.tmp
 ```
 
 ## Understanding the structure of the manifest and samplesheets
@@ -60,12 +65,12 @@ Once the input matrices are downloaded and unzipped, the manifest file should be
 
 ```
 key filepath    
-rinuv   ~/scflow_workshop2024/my_analysis/input/individual_1/    
-finov   ~/scflow_workshop2024/my_analysis/input/individual_2/    
-jafap   ~/scflow_workshop2024/my_analysis/input/individual_3/    
-rigap   ~/scflow_workshop2024/my_analysis/input/individual_4/ 
-vihig   ~/scflow_workshop2024/my_analysis/input/individual_5/ 
-bamum   ~/scflow_workshop2024/my_analysis/input/individual_6/    
+rinuv   /rds/general/user/nfancy/home/scflow_workshop2024/my_analysis/input/individual_1/    
+finov   /rds/general/user/nfancy/home/scflow_workshop2024/my_analysis/input/individual_2/    
+jafap   /rds/general/user/nfancy/home/scflow_workshop2024/my_analysis/input/individual_3/    
+rigap   /rds/general/user/nfancy/home/scflow_workshop2024/my_analysis/input/individual_4/ 
+vihig   /rds/general/user/nfancy/home/scflow_workshop2024/my_analysis/input/individual_5/ 
+bamum   /rds/general/user/nfancy/home/scflow_workshop2024/my_analysis/input/individual_6/    
 ```
 
 The file path directories contain the output of cellranger in the sparse matrix format, the three following files, namely:
@@ -108,9 +113,60 @@ This config file contains the parameters required for each individual step conta
 
 ## Hardware requirements config file
 
-Now we will look at another config file that will indicate to Nextflow the hardware resources required for each job. Copy the contents from the template here: [base.config](https://github.com/combiz/nf-core-scflow/blob/dev-nf/conf/base.config), create and paste its contents at the following location:
+Now we will look at [base.config](https://github.com/combiz/nf-core-scflow/blob/dev-nf/conf/base.config)file that will indicate to Nextflow the hardware resources required for each job. The contents need to be modified slightly to make it compatible for our run. Create and copy-paste the following in the file `~/scflow_workshop2024/my_analysis/conf/resources.config
+`
 
-~/scflow_workshop2024/my_analysis/conf/resources.config
+```bash
+
+process {
+
+    cpus   = { 1    * task.attempt }
+    memory = { 6.GB * task.attempt }
+    time   = { 4.h  * task.attempt }
+
+    errorStrategy = { task.exitStatus in [143,137,104,134,139] ? 'retry' : 'finish' }
+    maxRetries    = 1
+    maxErrors     = '-1'
+
+    withLabel:process_tiny {
+        cpus   = { 2     * task.attempt }
+        memory = { 6.GB * task.attempt }
+        time   = { 1.h   * task.attempt }
+    }
+    withLabel:process_low {
+        cpus   = { 2     * task.attempt }
+        memory = { 12.GB * task.attempt }
+        time   = { 4.h   * task.attempt }
+    }
+    withLabel:process_medium {
+        cpus   = { 6     * task.attempt }
+        memory = { 64.GB * task.attempt }
+        time   = { 4.h   * task.attempt }
+    }
+    withLabel:process_high {
+        cpus   = { 8    * task.attempt }
+        memory = { 96.GB * task.attempt }
+        time   = { 4.h  * task.attempt }
+    }
+    withLabel:process_long {
+        cpus   = { 4    * task.attempt }
+        memory = { 64.GB * task.attempt }
+        time   = { 20.h  * task.attempt }
+    }
+    withLabel:process_high_memory {
+        cpus   = { 8   }
+        memory = { 200.GB * task.attempt }
+        time   = { 4.h  * task.attempt }
+    }
+    withLabel:error_ignore {
+        errorStrategy = 'ignore'
+    }
+    withLabel:error_retry {
+        errorStrategy = 'retry'
+        maxRetries    = 2
+    }
+}
+```
 
 Add the following to the resources.config file:
 
@@ -173,7 +229,7 @@ Now you can re-run scFlow with an additional config file, create your job submis
 #!/bin/bash
 
 #PBS -l walltime=24:00:00
-#PBS -l select=1:ncpus=8:mem=24gb
+#PBS -l select=1:ncpus=2:mem=24gb
 #PBS -N my_analysis
 #PBS -o my_analysis.out
 #PBS -e my_analysis.err
@@ -238,7 +294,7 @@ singularity pull --name "nfancy-scflow-0.7.2.img" docker://nfancy/scflow:0.7.2
 singularity {
   enabled = true
   autoMounts = true
-  cacheDir = "~/scflow_workshop2024/singularity-cache/"
+  cacheDir = "/rds/general/user/$USER/home/scflow_workshop2024/singularity-cache/"
   runOptions = "-B /rds/,/rdsgpfs/,/rds/general/ephemeral/user/$USER/ephemeral/tmp/:/tmp,/rds/general/ephemeral/user/$USER/ephemeral/tmp/:/var/tmp"
 }
 ```
@@ -255,7 +311,7 @@ Your submission script would therefore be as follows:
 #!/bin/bash
 
 #PBS -l walltime=24:00:00
-#PBS -l select=1:ncpus=8:mem=24gb
+#PBS -l select=1:ncpus=2:mem=24gb
 #PBS -N my_analysis
 #PBS -o my_analysis.out
 #PBS -e my_analysis.err
