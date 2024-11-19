@@ -5,6 +5,19 @@ tool: true
 title: Session 3-Run a test single cell RNA sequencing data with nf-core/scflow
 ---
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+Now that you have (successfully) ran the test command of scFlow, this session will guide you through preparing your own run of scFlow for any potential dataset you may have.
+
+First things first, at any time during this session you can look at this page for guidance:
+
+[nf-co.re](https://nf-co.re/scflow/dev/)
+
+=======
+>>>>>>> 5177ea336028d52af421956bb85b8d8ad9f683b4
+=======
+>>>>>>> 5177ea336028d52af421956bb85b8d8ad9f683b4
+
 ## Create an analysis directory
 
 Create a directory, (eg. my_analysis) within your scflow_workshop2024 directory
@@ -14,20 +27,20 @@ cd scflow_workshop2024
 mkdir my_analysis
 ```
 
-## Understanding the inputs required for scFlow
+## Getting your samplesheet and manifest files ready
 
 ```bash
 mkdir ~/scflow_workshop2024/my_analysis/refs/
 ```
 
-Download the following into your analysis directory:
+Download the templates into your refs/ directory:
 
 ```bash 
 wget https://raw.githubusercontent.com/nf-core/test-datasets/scflow/refs/SampleSheet.tsv
 wget https://raw.githubusercontent.com/nf-core/test-datasets/scflow/refs/Manifest.txt
 ```
 
-There is a typo in the Manifest.txt file, spot it and correct it.
+There is a typo in the Manifest.txt file, spot it and correct it. Now we will download some test data, zipped by individual:
 
 ```bash
 mkdir ~/scflow_workshop2024/my_analysis/input/
@@ -36,28 +49,22 @@ cd ~/scflow_workshop2024/my_analysis/input/
 
 ```bash
 while read col1 col2; do wget $col2; done <  ~/scflow_workshop2024/my_analysis/refs/Manifest.txt
-ls | cut -f 1 -d . > sample.tmp
-while read line; do unzip $line.zip -d $line; done < sample.tmp
-rm ~/scflow_workshop2024/my_analysis/input/*zip
-rm sample.tmp
 ```
 
-## Understanding the structure of the manifest and samplesheets
-
-The manifest file should be in the following format, edit the template (Manifest.txt) you've just downloaded so that it matches where your input files are (the header should not be changed, should be in tab separated format):
-
-```
-key filepath    sample
-ajhxf   /scflow_workshop2024/my_analysis/input/individual_1/    Sample_XXX1
-bhjfv   /scflow_workshop2024/my_analysis/input/individual_2/    Sample_XXX2
-kjngh   /scflow_workshop2024/my_analysis/input/individual_3/    Sample_XXX3
-lopmn   /scflow_workshop2024/my_analysis/input/individual_4/    Sample_XXX4
-```
-
-The file path directories need to contain the output of cellbender, the three following files, namely:
+The zip files contain the following (you do not need to unzip):
 - barcodes.tsv.gz
 - features.tsv.gz
 - matrix.mtx.gz
+
+The names above should not be changed as the pipeline will look for those specically. Now edit your manifest so that the paths match the location of your files. It should be similar to the following:
+
+```
+key filepath    sample
+ajhxf   ~/scflow_workshop2024/my_analysis/input/individual_1.zip    Sample_XXX1
+bhjfv   ~/scflow_workshop2024/my_analysis/input/individual_2.zip    Sample_XXX2
+kjngh   ~/scflow_workshop2024/my_analysis/input/individual_3.zip    Sample_XXX3
+lopmn   ~/scflow_workshop2024/my_analysis/input/individual_4.zip    Sample_XXX4
+```
 
 You do not need to edit the samplesheet file, but it should be in the following format:
 
@@ -74,6 +81,8 @@ Note that your metadata and manifest files must have the same number of rows and
 
 ## Setting up config files
 
+This section will focus on setting up the config files for your analysis (they contain all the parameters needed for the pipeline to run).
+
 Make a directory for additional config files.
 
 ```bash
@@ -88,7 +97,7 @@ Copy the contents of the template here: [scflow_analysis.config](https://github.
 
 This config file contains the parameters required for each individual step contained in the pipeline. Once again, open the file and browse the different parameters, edit to suit your future analyses.
 
-## Hardware requirments config file
+## Hardware requirements config file
 
 In this file, you can see hardware and time allocations for groups of jobs that are categorized into:
 - tiny
@@ -154,7 +163,7 @@ params {
   
   //Analysis Resource Params - general
   ctd_path = "~/scflow_workshop2024/my_analysis/ctd.zip"
-  ensembl_mappings = "~/scflow_workshop2024/my_analysis/ensembl_mappings_human.tsv"
+  ensembl_mappings = "~/scflow_workshop2024/my_analysis/ensembl_mappings.tsv"
   reddim_genes_yml = "~/scflow_workshop2024/my_analysis/reddim_genes.yml"
   
 }
@@ -186,9 +195,9 @@ $samplesheet=###
 $manifest=###
 
 ~/scflow_workshop2024/bin/nextflow run combiz/nf-core-scflow \
+-r dev-nf \
 --input $samplesheet \
 --manifest $manifest \
--r dev-nf \
 -c $scflow_config \
 -c $resource_config
 ```
@@ -269,13 +278,11 @@ $manifest=###
 $celltype_mappings=###
 
 ~/scflow_workshop2024/bin/nextflow run combiz/nf-core-scflow \
---input $samplesheet \
---manifest $manifest \
 -r dev-nf \
--c $scflow_config \
 --input $samplesheet \
 --manifest $manifest \
---celltype_mappings $celltype_mappings \
+-c $scflow_config \
+-c $resource_config
 --resume
 ```
 
