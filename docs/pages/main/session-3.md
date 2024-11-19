@@ -143,9 +143,9 @@ params {
   max_time = 24.h
   
   //Analysis Resource Params - general
-  ctd_path = "/rds/general/project/ukdrmultiomicsproject/live/MAP_pipelines/snRNAseq/assets/ctd.zip"
-  ensembl_mappings = "/rds/general/project/ukdrmultiomicsproject/live/MAP_pipelines/snRNAseq/assets/ensembl_mappings_human.tsv"
-  reddim_genes_yml = "/rds/general/project/ukdrmultiomicsproject/live/MAP_pipelines/snRNAseq/assets/reddim_genes_human.yml"
+  ctd_path = "~/scflow_workshop2024/my_analysis//ctd.zip"
+  ensembl_mappings = "~/scflow_workshop2024/my_analysis/ensembl_mappings_human.tsv"
+  reddim_genes_yml = "~/scflow_workshop2024/my_analysis/reddim_genes_human.yml"
   
 }
 ```
