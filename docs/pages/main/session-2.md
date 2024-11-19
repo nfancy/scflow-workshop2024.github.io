@@ -124,6 +124,17 @@ This job has now been submitted to the HCP queue.  To check the progress of the 
 ```
 qstat
 ```
+## Outputs of a queue submission
+
+Once qstat indicates the job run above has finished you can view the Nextflow output:
+
+```
+ls -la
+cat hello.out
+
+```
+
+Additionally, you can check the log file created by nextflow which has more detailed information of the run by `cat .nextflow.log`. You can see the file starts with a dot meaning it's a hidden file and can't be seen using `ls` alone. 
 
 ## Understanding the PBS parameters
 
@@ -151,16 +162,6 @@ That is the information you give to PBS for the command you want to run, the eac
 - **e**: the path to your error log
 
 There are a lot of parameters for PBS that you can explore [here]( https://albertsk.org/wp-content/uploads/2011/12/pbs.pdf )
-
-## Outputs of a queue submission
-
-Once qstat indicates the job run above has finished you can view the Nextflow output:
-
-```
-ls
-cat hello.out
-
-```
 
 ## Submit first nf-core/scflow job on HPC
 

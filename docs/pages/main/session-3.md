@@ -62,7 +62,7 @@ rm sample.tmp
 
 ## Understanding the structure of the manifest and samplesheets
 
-Once the input matrices are downloaded and unzipped, the manifest file should be in the following format, edit the template (Manifest.txt) you've just downloaded so that it matches where your input files are (the header should not be changed, should be in tab separated format):
+Once the input matrices are downloaded and unzipped, the manifest file should be in the following format, edit the template (Manifest.txt) you've just downloaded so that it matches where your input files are (the header should not be changed, should be in tab separated format). Replace **nfancy** with your HPC username. Note: Only absolute file paths should be used. 
 
 ```
 key filepath    
@@ -114,8 +114,7 @@ This config file contains the parameters required for each individual step conta
 
 ## Hardware requirements config file
 
-Now we will look at [base.config](https://github.com/combiz/nf-core-scflow/blob/dev-nf/conf/base.config)file that will indicate to Nextflow the hardware resources required for each job. The contents need to be modified slightly to make it compatible for our run. Create and copy-paste the following in the file `~/scflow_workshop2024/my_analysis/conf/resources.config
-`
+Now we will look at [base.config](https://github.com/combiz/nf-core-scflow/blob/dev-nf/conf/base.config) file that will indicate to Nextflow the hardware resources required for each job. The contents need to be modified slightly to make it compatible for our run. Create a file `~/scflow_workshop2024/my_analysis/conf/resources.config` and copy-paste the following in the file. 
 
 ```bash
 
@@ -169,7 +168,6 @@ process {
 }
 ```
 
-Add the following to the resources.config file:
 
 In this file, you can see hardware and time allocations for groups of jobs that are categorized into:
 - tiny
@@ -180,7 +178,6 @@ In this file, you can see hardware and time allocations for groups of jobs that 
 - high_memory
 
 And there are already values attributed to each categories of jobs. As you can see the jobs will be retried if failed, but with more resource allocations. Keep in mind though, that the job might not fail because of hardware/time requirements so increasing them might not solve everything!
-
 
 This config file is especially important as it will be what nextflow requests from PBS for each individual job (the more memory intensive/lengthy a job is the more hardware/time resources you should allocate it).
 
@@ -205,7 +202,7 @@ wget https://raw.githubusercontent.com/nf-core/test-datasets/scflow/refs/reddim_
 
 Feel free to open them and browse their contents
 
-Open the following file: ~/scflow_workshop2024/my_analysis/conf/resources.config
+Open the file `~/scflow_workshop2024/my_analysis/conf/resources.config`
 
 Add the following:
 
@@ -253,7 +250,7 @@ manifest=###
 -r dev-nf \
 --input $samplesheet \
 --manifest $manifest \
--profile singularity,imperial \
+-profile imperial \
 -c $scflow_config \
 -c $resource_config
 ```
