@@ -84,12 +84,9 @@ In this file, you can see hardware and time allocations for groups of jobs that 
 
 And there are already values attributed to each categories of jobs. As you can see the jobs will be retried if failed, but with more resource allocations. Keep in mind though, that the job might not fail because of hardware/time requirements so increasing them might not solve everything!
 
-Now we will look at another config file that will indicate to Nextflow the hardware resources required for each job. Copy the contents from the template here: [base.config](https://github.com/combiz/nf-core-scflow/blob/dev/conf/base.config)
+Now we will look at another config file that will indicate to Nextflow the hardware resources required for each job. Copy the contents from the template here: [base.config](https://github.com/combiz/nf-core-scflow/blob/dev/conf/base.config), create and paste its contents at the following location:
 
-Open a new file in the following location:
 ~/scflow_workshop2024/my_analysis/conf/resources.config
-
-This config file is especially important as it will be what nextflow requests from PBS for each individual job (the more memory intensive/lengthy a job is the more hardware/time resources you should allocate it).
 
 Add the following to the resources.config file:
 
@@ -104,6 +101,8 @@ params {
 }
 
 ```
+
+This config file is especially important as it will be what nextflow requests from PBS for each individual job (the more memory intensive/lengthy a job is the more hardware/time resources you should allocate it).
 
 What step of the pipeline would you say is most memory intensive? If it happens to fail because of a lack of RAM which line would you edit in the config file?
 
@@ -138,7 +137,7 @@ params {
   max_time = 24.h
   
   //Analysis Resource Params - general
-  ctd_path = "~/scflow_workshop2024/my_analysis//ctd.zip"
+  ctd_path = "~/scflow_workshop2024/my_analysis/ctd.zip"
   ensembl_mappings = "~/scflow_workshop2024/my_analysis/ensembl_mappings_human.tsv"
   reddim_genes_yml = "~/scflow_workshop2024/my_analysis/reddim_genes.yml"
   
