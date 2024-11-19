@@ -17,6 +17,7 @@ First things first, at any time during this session you can look at this page fo
 >>>>>>> 5177ea336028d52af421956bb85b8d8ad9f683b4
 =======
 >>>>>>> 5177ea336028d52af421956bb85b8d8ad9f683b4
+
 ## Create an analysis directory
 
 Create a directory, (eg. my_analysis) within your scflow_workshop2024 directory
@@ -39,7 +40,7 @@ wget https://raw.githubusercontent.com/nf-core/test-datasets/scflow/refs/SampleS
 wget https://raw.githubusercontent.com/nf-core/test-datasets/scflow/refs/Manifest.txt
 ```
 
-There is a typo in the Manifest.txt file, spot it and correct it. Now we will download some test barcodes, features and counts using the Manifest.txt file:
+There is a typo in the Manifest.txt file, spot it and correct it. Now we will download some test data, zipped by individual:
 
 ```bash
 mkdir ~/scflow_workshop2024/my_analysis/input/
@@ -48,28 +49,21 @@ cd ~/scflow_workshop2024/my_analysis/input/
 
 ```bash
 while read col1 col2; do wget $col2; done <  ~/scflow_workshop2024/my_analysis/refs/Manifest.txt
-ls | cut -f 1 -d . > sample.tmp
-while read line; do unzip $line.zip -d $line; done < sample.tmp
 ```
 
-The last command has created 6 subdirectories that contain the following (the must have those specific names):
+The zip files contain the following (you do not need to unzip):
 - barcodes.tsv.gz
 - features.tsv.gz
 - matrix.mtx.gz
 
-Now just clean up a couple intermediary files:
-
-```bash
-rm ~/scflow_workshop2024/my_analysis/input/*zip
-rm sample.tmp
-```
+The names above should not be changed as the pipeline will look for those specically. Now edit your manifest so that the paths match the location of your files. It should be similar to the following:
 
 ```
 key filepath    sample
-ajhxf   /scflow_workshop2024/my_analysis/input/individual_1/    Sample_XXX1
-bhjfv   /scflow_workshop2024/my_analysis/input/individual_2/    Sample_XXX2
-kjngh   /scflow_workshop2024/my_analysis/input/individual_3/    Sample_XXX3
-lopmn   /scflow_workshop2024/my_analysis/input/individual_4/    Sample_XXX4
+ajhxf   ~/scflow_workshop2024/my_analysis/input/individual_1.zip    Sample_XXX1
+bhjfv   ~/scflow_workshop2024/my_analysis/input/individual_2.zip    Sample_XXX2
+kjngh   ~/scflow_workshop2024/my_analysis/input/individual_3.zip    Sample_XXX3
+lopmn   ~/scflow_workshop2024/my_analysis/input/individual_4.zip    Sample_XXX4
 ```
 
 You do not need to edit the samplesheet file, but it should be in the following format:
