@@ -5,12 +5,6 @@ tool: true
 title: Session 3-Run a test single cell RNA sequencing data with nf-core/scflow
 ---
 
-First things first, at any time during this session you can look at this page for guidance:
-
-https://nf-co.re/scflow/dev/
-
-
-
 ## Create an analysis directory
 
 Create a directory, (eg. my_analysis) within your scflow_workshop2024 directory
@@ -33,13 +27,6 @@ Look at the contents, what do you think each row refers to? What is the link bet
 
 ## Setting up config files
 
-The last command you ran in session 2 must have created two config files, open them with a text editor (eg. VSCode)
-
-Explore the parameters and reflect on their function, edit at your convenience
-
-/rds/general/user/$username/home/.nextflow/config
-/rds/general/user/$username/home/.nextflow/assets/combiz/nf-core-scflow/nextflow.config
-
 Make a directory for additional config files.
 
 ```bash
@@ -48,7 +35,7 @@ mkdir ~/scflow_workshop2024/my_analysis/conf
 
 ## Parameters for indidual steps within the pipeline
 
-Copy the contents of the template here: (scflow_analysis.config)[https://github.com/combiz/nf-core-scflow/blob/dev/conf/scflow_analysis.config] and paste it into a new file (you can call it scflow_analysis.config) within the directory you have just created
+Copy the contents of the template here: [scflow_analysis.config](https://github.com/combiz/nf-core-scflow/blob/dev/conf/scflow_analysis.config) and paste it into a new file (you can call it scflow_analysis.config) within the directory you have just created
 
 ~/scflow_workshop2024/my_analysis/conf/scflow_analysis.config
 
@@ -66,12 +53,26 @@ In this file, you can see hardware and time allocations for groups of jobs that 
 
 And there are already values attributed to each categories of jobs. As you can see the jobs will be retried if failed, but with more resource allocations. Keep in mind though, that the job might not fail because of hardware/time requirements so increasing them might not solve everything!
 
-Now we will look at another config file that will indicate to Nextflow the hardware resources required for each job. Copy the contents from the template here: (base.config)[https://github.com/combiz/nf-core-scflow/blob/dev/conf/base.config]
+Now we will look at another config file that will indicate to Nextflow the hardware resources required for each job. Copy the contents from the template here: [base.config](https://github.com/combiz/nf-core-scflow/blob/dev/conf/base.config)
 
-Into a file in the following location:
-~/scflow_workshop2024/my_analysis/conf/hardware.config
+Open a new file in the following location:
+~/scflow_workshop2024/my_analysis/conf/resources.config
 
 This config file is especially important as it will be what nextflow requests from PBS for each individual job (the more memory intensive/lengthy a job is the more hardware/time resources you should allocate it).
+
+Add the following to the resources.config file:
+
+```
+params {
+
+  // Resources
+  max_memory = 640.GB
+  max_cpus = 40
+  max_time = 24.h
+
+}
+
+```
 
 What step of the pipeline would you say is most memory intensive? If it happens to fail because of a lack of RAM which line would you edit in the config file?
 
@@ -92,6 +93,26 @@ wget https://raw.githubusercontent.com/nf-core/test-datasets/scflow/refs/reddim_
 ```
 
 Feel free to open them and browse their contents
+
+Open the following file: ~/scflow_workshop2024/my_analysis/conf/resources.config
+
+Add the following:
+
+```
+params {
+
+  // Resources
+  max_memory = 640.GB
+  max_cpus = 40
+  max_time = 24.h
+  
+  //Analysis Resource Params - general
+  ctd_path = "~/scflow_workshop2024/my_analysis//ctd.zip"
+  ensembl_mappings = "~/scflow_workshop2024/my_analysis/ensembl_mappings_human.tsv"
+  reddim_genes_yml = "~/scflow_workshop2024/my_analysis/reddim_genes.yml"
+  
+}
+```
 
 ## Re-run pipeline with your new parameters
 
@@ -114,16 +135,12 @@ export JAVA_HOME=~/scflow_workshop2024/bin/jdk-23.0.1
 export PATH=~/scflow_workshop2024/bin/jdk-23.0.1/bin/:$PATH
 
 scflow_config=~/scflow_workshop2024/my_analysis/conf/scflow_analysis.config
-$samplesheet=###
-$manifest=###
-$celltype_mappings=###
+resource_config=####
 
 ~/scflow_workshop2024/bin/nextflow run combiz/nf-core-scflow \
 -r dev-nf \
 -c $scflow_config \
---input $samplesheet \
---manifest $manifest \
---celltype_mappings $celltype_mappings
+-c $resource_config
 ```
 
 This might take a while, whilst it is running you can check the status of the different jobs with the command below:
@@ -144,13 +161,13 @@ Download on of the QC reports and go through the different metrics
 
 ## Running the pipeline using a singularity image
 
-In order to make your analysis more reproducible you can use a singularity image for scFlow, one can be downloaded in the following way:
+In order to make your analysis more reproducible you can use a singularity image for scFlow, it can be done in the following way:
 
 1. Create a directory to store your image:
 
 ```bash
-mkdir ~/singularity-cache/
-cd ~/singularity-cache/
+mkdir ~/scflow_workshop2024/singularity-cache/
+cd ~/scflow_workshop2024/singularity-cache/
 ```
 
 2. Download the image:
@@ -159,7 +176,19 @@ cd ~/singularity-cache/
 singularity pull --name "nfancy-scflow-0.7.2.img" docker://nfancy/scflow:0.7.2
 ```
 
+3. Then add this snippet in your resource.config file:
 
+```
+singularity {
+  enabled = true
+  autoMounts = true
+  cacheDir = "~/scflow_workshop2024/singularity-cache/"
+  runOptions = "-B /rds/,/rdsgpfs/,/rds/general/ephemeral/user/$USER/ephemeral/tmp/:/tmp,/rds/general/ephemeral/user/$USER/ephemeral/tmp/:/var/tmp"
+  
+}
+
+workDir = "/rds/general/ephemeral/user/$USER/ephemeral/tmp"
+```
 
 ## Generating your own input files
 
