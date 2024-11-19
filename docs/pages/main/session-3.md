@@ -118,6 +118,8 @@ wget https://raw.githubusercontent.com/nf-core/test-datasets/scflow/refs/reddim_
 
 Feel free to open them and browse their contents
 
+You can add the path to those files in the resource.config file, in 
+
 ## Re-run pipeline with your new parameters
 
 Now you can re-run scFlow with an additional config file, edit your job submission file as follows:
@@ -139,16 +141,12 @@ export JAVA_HOME=~/scflow_workshop2024/bin/jdk-23.0.1
 export PATH=~/scflow_workshop2024/bin/jdk-23.0.1/bin/:$PATH
 
 scflow_config=~/scflow_workshop2024/my_analysis/conf/scflow_analysis.config
-$samplesheet=###
-$manifest=###
-$celltype_mappings=###
+resource_config=
 
 ~/scflow_workshop2024/bin/nextflow run combiz/nf-core-scflow \
 -r dev-nf \
 -c $scflow_config \
---input $samplesheet \
---manifest $manifest \
---celltype_mappings $celltype_mappings
+-c $resource_config
 ```
 
 This might take a while, whilst it is running you can check the status of the different jobs with the command below:
@@ -169,7 +167,7 @@ Download on of the QC reports and go through the different metrics
 
 ## Running the pipeline using a singularity image
 
-In order to make your analysis more reproducible you can use a singularity image for scFlow, one can be downloaded in the following way:
+In order to make your analysis more reproducible you can use a singularity image for scFlow, it can be done in the following way:
 
 1. Create a directory to store your image:
 
@@ -184,7 +182,19 @@ cd ~/singularity-cache/
 singularity pull --name "nfancy-scflow-0.7.2.img" docker://nfancy/scflow:0.7.2
 ```
 
+3. Then add this snippet in your resource.config file:
 
+```
+singularity {
+  enabled = true
+  autoMounts = true
+  cacheDir = "~/singularity-cache/"
+  runOptions = "-B /rds/,/rdsgpfs/,/rds/general/ephemeral/user/$USER/ephemeral/tmp/:/tmp,/rds/general/ephemeral/user/$USER/ephemeral/tmp/:/var/tmp"
+  
+}
+
+workDir = "/rds/general/ephemeral/user/$USER/ephemeral/tmp"
+```
 
 ## Generating your own input files
 
