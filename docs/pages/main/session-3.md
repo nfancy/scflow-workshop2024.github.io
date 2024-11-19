@@ -5,18 +5,11 @@ tool: true
 title: Session 3-Run a test single cell RNA sequencing data with nf-core/scflow
 ---
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 Now that you have (successfully) ran the test command of scFlow, this session will guide you through preparing your own run of scFlow for any potential dataset you may have.
 
 First things first, at any time during this session you can look at this page for guidance:
 
 [nf-co.re](https://nf-co.re/scflow/dev/)
-
-=======
->>>>>>> 5177ea336028d52af421956bb85b8d8ad9f683b4
-=======
->>>>>>> 5177ea336028d52af421956bb85b8d8ad9f683b4
 
 ## Create an analysis directory
 
