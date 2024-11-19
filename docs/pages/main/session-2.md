@@ -28,6 +28,18 @@ mkdir -p bin
 cd bin
 ```
 
+## Download Java 
+
+Nextflow depends on Java. Although our HPC has Java modules or one can install it in the conda environment, the most straight forward way is to download the binaries and export the path to your environment. The downside is if you forget to export the path, you will get an error saying Java is required and not available. Download Java following the codes below:
+
+```bash
+wget https://download.oracle.com/java/23/latest/jdk-23_linux-x64_bin.tar.gz
+tar -xvzf jdk-23_linux-x64_bin.tar.gz
+rm jdk-23_linux-x64_bin.tar.gz 
+
+export JAVA_HOME=~/scflow_workshop2024/bin/jdk-23.0.1
+export PATH=~/scflow_workshop2024/bin/jdk-23.0.1/bin/:$PATH
+```
 
 ## Install nextflow
 
@@ -41,16 +53,6 @@ Use the following code to make nextflow executable
 
 ```bash
 chmod +x nextflow
-```
-
-## Download Java 
-
-Nextflow depends on Java. Although our HPC has Java modules or one can install it in the conda environment, the most straight forward way is to download the binaries and export the path to your environment. The downside is if you forget to export the path, you will get an error saying Java is required and not available. Download Java following the codes below:
-
-```bash
-wget https://download.oracle.com/java/23/latest/jdk-23_linux-x64_bin.tar.gz
-tar -xvzf jdk-23_linux-x64_bin.tar.gz
-rm jdk-23_linux-x64_bin.tar.gz 
 ```
 
 Let's inspect what we have in our directories so far:
@@ -68,8 +70,6 @@ ls
 It's a crime not to run "Hello world" when using a new programming language (I am not joking!).
 
 ```bash
-export JAVA_HOME=~/scflow_workshop2024/bin/jdk-23.0.1
-export PATH=~/scflow_workshop2024/bin/jdk-23.0.1/bin/:$PATH
 ./bin/nextflow run hello
 ```
 
