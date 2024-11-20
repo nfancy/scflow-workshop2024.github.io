@@ -23,6 +23,7 @@ Create a directory, (eg. my_analysis) within your scflow_workshop2024 directory.
 ```bash
 cd ~/scflow_workshop2024
 mkdir my_analysis
+cd my_analysis
 ```
 
 ## Getting your samplesheet and manifest files ready
@@ -31,14 +32,13 @@ Just to keep the launch directory neat and tidy we will create multiple sub-dire
 
 ```bash
 mkdir ~/scflow_workshop2024/my_analysis/refs/
-cd ~/scflow_workshop2024/my_analysis/refs/
 ```
 
 Download the templates into your refs/ directory:
 
 ```bash 
-wget https://raw.githubusercontent.com/nf-core/test-datasets/scflow/refs/SampleSheet.tsv
-wget https://raw.githubusercontent.com/nf-core/test-datasets/scflow/refs/Manifest.txt
+wget -P ~/scflow_workshop2024/my_analysis/refs/ https://raw.githubusercontent.com/nf-core/test-datasets/scflow/refs/SampleSheet.tsv
+wget -P ~/scflow_workshop2024/my_analysis/refs/ https://raw.githubusercontent.com/nf-core/test-datasets/scflow/refs/Manifest.txt
 ```
 There is a typo in the Manifest.txt file, spot it and correct it by opening it on VScode explorer.
 
@@ -46,18 +46,16 @@ We will now download the raw input matrices that contains the gene expression co
 
 ```bash
 mkdir ~/scflow_workshop2024/my_analysis/input/
-cd ~/scflow_workshop2024/my_analysis/input/
 ```
 
 The following codes will download the zipped files and unzip them.
 
 ```bash
-
-while read col1 col2; do wget $col2; done <  ~/scflow_workshop2024/my_analysis/refs/Manifest.txt
-ls | cut -f 1 -d . > sample.tmp
-while read line; do unzip $line.zip -d $line; done < sample.tmp
-rm ~/scflow_workshop2024/my_analysis/input/*zip
-rm sample.tmp
+while read col1 col2; do wget -P ~/scflow_workshop2024/my_analysis/input/ $col2; done <  ~/scflow_workshop2024/my_analysis/refs/Manifest.txt
+for i in $(ls ~/scflow_workshop2024/my_analysis/input/); do 
+    unzip ~/scflow_workshop2024/my_analysis/input/$i -d ~/scflow_workshop2024/my_analysis/input/${i%.zip}/; 
+done
+rm input/*.zip
 ```
 
 ## Understanding the structure of the manifest and samplesheets
@@ -128,6 +126,11 @@ process {
     maxRetries    = 1
     maxErrors     = '-1'
 
+// General resource requirements
+        cpus   = { 1 * task.attempt }
+        memory = { 6.GB * task.attempt }
+        time   = { 4.h * task.attempt }
+
     withLabel:process_tiny {
         cpus   = { 2     * task.attempt }
         memory = { 6.GB * task.attempt }
@@ -149,8 +152,8 @@ process {
         time   = { 4.h  * task.attempt }
     }
     withLabel:process_long {
-        cpus   = { 4    * task.attempt }
-        memory = { 64.GB * task.attempt }
+        cpus   =  4 
+        memory = 64.GB 
         time   = { 20.h  * task.attempt }
     }
     withLabel:process_high_memory {
@@ -163,7 +166,7 @@ process {
     }
     withLabel:error_retry {
         errorStrategy = 'retry'
-        maxRetries    = 2
+        maxRetries    = 1
     }
 }
 ```
@@ -189,15 +192,14 @@ Create a resources folder:
 
 ```bash
 mkdir ~/scflow_workshop2024/my_analysis/resources
-cd ~/scflow_workshop2024/my_analysis/resources
 ```
 
 Download the following files using wget
 
 ```bash
-wget https://raw.githubusercontent.com/nf-core/test-datasets/scflow/assets/ensembl_mappings.tsv
-wget https://raw.githubusercontent.com/combiz/scFlowData/dev-nf/assets/ctd.zip
-wget https://raw.githubusercontent.com/nf-core/test-datasets/scflow/refs/reddim_genes.yml
+wget -P ~/scflow_workshop2024/my_analysis/resources https://raw.githubusercontent.com/nf-core/test-datasets/scflow/assets/ensembl_mappings.tsv
+wget -P ~/scflow_workshop2024/my_analysis/resources https://raw.githubusercontent.com/combiz/scFlowData/dev-nf/assets/ctd.zip
+wget -P ~/scflow_workshop2024/my_analysis/resources https://raw.githubusercontent.com/nf-core/test-datasets/scflow/refs/reddim_genes.yml
 ```
 
 Feel free to open them and browse their contents
