@@ -213,7 +213,7 @@ params {
   
   //Analysis Resource Params - general
   ctd_path = "/rds/general/user/$USER/home/scflow_workshop2024/my_analysis/resources/ctd.zip"
-  ensembl_mappings = "/rds/general/user/$USER/home/scflow_workshop2024/my_analysis/resources/ensembl_mappings_human.tsv"
+  ensembl_mappings = "/rds/general/user/$USER/home/scflow_workshop2024/my_analysis/resources/ensembl_mappings.tsv"
   reddim_genes_yml = "/rds/general/user/$USER/home/scflow_workshop2024/my_analysis/resources/reddim_genes.yml"
   
 }
