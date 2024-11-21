@@ -229,7 +229,7 @@ Now you can run scFlow with an additional config file, create your job submissio
 #!/bin/bash
 
 #PBS -l walltime=24:00:00
-#PBS -l select=1:ncpus=2:mem=24gb
+#PBS -l select=1:ncpus=4:mem=24gb
 #PBS -N my_analysis
 #PBS -o my_analysis.out
 #PBS -e my_analysis.err
@@ -319,7 +319,7 @@ Your submission script would therefore be as follows:
 #!/bin/bash
 
 #PBS -l walltime=24:00:00
-#PBS -l select=1:ncpus=2:mem=24gb
+#PBS -l select=1:ncpus=4:mem=24gb
 #PBS -N my_analysis
 #PBS -o my_analysis.out
 #PBS -e my_analysis.err
